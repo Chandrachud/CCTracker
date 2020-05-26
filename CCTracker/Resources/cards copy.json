@@ -1,0 +1,39 @@
+{
+    "cards": [{
+              "cardHolder": "Chandrachud Patil",
+              "company": "Wells Fargo",
+              "cardType": "Corporate Card",
+              "cardNumber": "xxxx xxxx 3333",
+              "approvedTransactions": "12",
+              "submittedTransactions": "5",
+              "pendingTransactions": "9",
+              
+              "transactions": [
+                               {
+                               "merchantName": "Merchant Name",
+                               "statusCode": "0",
+                               "transactionId": "1234641",
+                               "amount": "42",
+                               "transactionDate": "Dec 06  | Travel and Accomodation"
+                               },
+                               {
+                               "merchantName": "Ola cabs Pvt Ltd India",
+                               "statusCode": "2",
+                               "transactionId": "1234641",
+                               "amount": "42",
+                               "transactionDate": "Dec 06  |  The Trident hotel Pune"
+                               },
+
+                               {
+                               "merchantName": "Merchant Name",
+                               "statusCode": "1",
+                               "transactionId": "1234641",
+                               "amount": "42",
+                               "transactionDate": "Dec 06  |  The Trident hotel Pune"
+                               }
+                               ]
+              }
+              
+              
+             ]
+}

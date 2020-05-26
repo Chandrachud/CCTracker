@@ -1,0 +1,95 @@
+
+Activate card:--
+
+http://localhost:8080/expensetracker/rest/v0/service/activate/
+{
+ "cardNumber":1234567891,
+ "phone":"9876543211",
+ "lanId":795643,
+ "password":"test@1234",
+ "firstName":"John1",
+ "lastName":"Doe1",
+ "userName":"Johndoe1"
+}
+
+
+Login -:
+
+http://localhost:8122/expensetracker/rest/v0/service/user/login/
+{
+ "userName":"newUser1",
+ "password":"userpwds1"
+}
+
+
+Change password :-
+
+http://localhost:8122/expensetracker/rest/v0/service/user/change/password
+{
+ "userName":"newUser1",
+ "password":"userpwds1",
+ "newPassword":"newpwd22",
+ "userId":111
+}
+
+
+
+Get Dashboard :-
+
+http://localhost:8080/expensetracker/rest/v0/service/get/dashboard/user/{userId}/
+
+
+
+Save Transaction :-
+
+http://localhost:8080/expensetracker/rest/v0/service/save/transaction/detail/
+{
+ "transactionNumber":"12345",
+ "transactionName":"EGS Vendor Meet",
+ "date":"2015-12-12",
+ "cardNumber":"1234567891",
+ "category":1,
+ "subCategory":1,
+ "location": "Bandra,Mumbai",
+ "merchantId": 1,
+ "merchantName": "Trident Hotel",
+ "receipt":"5717230bad81ad008ebd271e"
+}
+
+
+Upload Transaction Reciept:-
+
+http://localhost:8080/expensetracker/rest/v0/service//upload/tran/file/
+
+file: "lsdfjhklfjlfgdfkjhlkfjghlkjhlfjhljhldfjhklfdkjghlkfjhgklj"
+Output: "5717230bad81ad008ebd271e"
+
+Get transaction :-
+
+http://localhost:8080/expensetracker/rest/v0/service/get/transaction/{transactionId}
+
+
+
+List All Transactions:-
+
+http://localhost:8080/expensetracker/rest/v0/service/get/all/transaction/user/{userId}
+
+
+
+Get User Profile :-
+
+http://localhost:8080/expensetracker/rest/v0/service/get/profile/user/{userId}/
+
+
+
+Edit user profile :--
+
+http://localhost:8080/expensetracker/rest/v0/service/save/user/profile/
+
+{
+	"userId": 1,
+	"firstName": "John",
+	"lastName": "Doe",
+	"email": "john",
+	"mobile": "9876384564"
+}
