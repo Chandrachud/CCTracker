@@ -38,19 +38,19 @@ let     USER_FILES_PATH                                     = "UserFiles"
 let     TABLECELL_COLOR                                     = UIColor(red: 1, green:1, blue: 0.8, alpha: 1)
 
 
-typealias MyClosure = (data: AnyObject?, response: NSURLResponse?, msgError: NSError?) -> Void
-typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
+typealias MyClosure = (_ data: AnyObject?, _ response: URLResponse?, _ msgError: NSError?) -> Void
+typealias onDataDownLoadComplete = (_ msgError: NSError?) -> Void
 
 
 
-@objc class DataManager : NSObject {
+@objcMembers class DataManager : NSObject {
     
     private static let sharedInstance = DataManager()
     
     
     
     
-    private var appFileManager = NSFileManager.defaultManager()
+    private var appFileManager = FileManager.default
     
     // METHODS
     private override init() {
@@ -62,53 +62,53 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
     
     class func getTheUserName() -> String{
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = UserDefaults.standard
         
         var userName : String
-        userName = userDefaults.objectForKey(USERNAME) as! String
+        userName = userDefaults.object(forKey: USERNAME) as! String
         
         return userName
         
     }
-    class func getTheUserId() -> String{
+    @objc class func getTheUserId() -> String{
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = UserDefaults.standard
         
         var userName : String
-        userName = userDefaults.objectForKey(USERID) as! String
+        userName = userDefaults.object(forKey: USERID) as! String
         
         return userName
         
     }
     
     
-    class func uploadFileWithTheDetails(urlstr : String? , httpMethod : String? , httpReqbody : NSDictionary?, httpReqHeader : NSDictionary?, fileUrl : NSURL?, requestOrgnalData : Bool,onCompletionHandler : MyClosure ) {
+    class func uploadFileWithTheDetails(urlstr : String? , httpMethod : String? , httpReqbody : NSDictionary?, httpReqHeader : NSDictionary?, fileUrl : NSURL?, requestOrgnalData : Bool,onCompletionHandler : @escaping MyClosure ) {
         
         
         if (nil == urlstr  || nil == httpMethod || nil == fileUrl) {
             
             let errorDetails : NSError = NSError(domain: "", code: ERROR_CODE_PARA_MISSING, userInfo: nil)
             
-            onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+            onCompletionHandler(nil, nil, errorDetails)
             
         }
         
-        let request = NSMutableURLRequest(URL:NSURL(string: urlstr!)!)
+        let request = NSMutableURLRequest(url:NSURL(string: urlstr!)! as URL)
         
-        request.HTTPMethod = httpMethod!
+        request.httpMethod = httpMethod!
         
         //Body
         if( nil != httpReqbody) {
             
             do
             {
-                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(httpReqbody!, options: NSJSONWritingOptions.PrettyPrinted)
+                request.httpBody = try JSONSerialization.data(withJSONObject: httpReqbody!, options: JSONSerialization.WritingOptions.prettyPrinted)
             }
             catch
             {
                 let errorDetails : NSError = NSError(domain: "", code: ERROR_CODE_PARA_MISSING, userInfo: nil)
                 
-                onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                onCompletionHandler(nil, nil, errorDetails)
             }
         }
         
@@ -123,17 +123,17 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         //        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         
-        let task = session.uploadTaskWithRequest(request, fromFile: fileUrl!, completionHandler: { data, response, error -> Void in
+        let task = session.uploadTask(with: request as URLRequest, fromFile: fileUrl! as URL, completionHandler: { data, response, error -> Void in
             
             
             
-            if let httpResponse = response as? NSHTTPURLResponse {
+            if let httpResponse = response as? HTTPURLResponse {
                 if 500 == httpResponse.statusCode {
                     
                     let errorDetails : NSError? = NSError(domain: "", code: NSURLErrorTimedOut, userInfo: nil)
-                    onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                    onCompletionHandler(nil, nil, errorDetails)
                     
                     
                 }
@@ -142,14 +142,14 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                     if( nil != error){
                         
                         
-                        var errorDetails : NSError? = error
-                        
-                        if error?.code ==  NSURLErrorTimedOut {
+                        var errorDetails : Error? = error
+
+                        if error?._code ==  NSURLErrorTimedOut {
                             
                             errorDetails = NSError(domain: "", code: ERROR_CODE_TIMED_OUT, userInfo: nil)
                             
                         }
-                        else if NSURLErrorNotConnectedToInternet == error?.code {
+                        else if NSURLErrorNotConnectedToInternet == error?._code {
                             
                             errorDetails = NSError(domain: "", code: ERROR_CODE_TIMED_OUT, userInfo: nil)
                             
@@ -161,7 +161,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                         }
                         
                         
-                        onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                        onCompletionHandler(nil, nil, errorDetails as NSError?)
                         
                     }
                         
@@ -170,7 +170,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                         
                         if true == requestOrgnalData{
                             
-                            onCompletionHandler(data: data!, response: nil, msgError: nil)
+                            onCompletionHandler(data! as AnyObject, nil, nil)
                             
                         }
                         else {
@@ -179,10 +179,10 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                                 
                                 let parsedData: AnyObject?
                                 
-                                parsedData = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
+                                parsedData = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions(rawValue: 0)) as AnyObject
                                 
                                 
-                                onCompletionHandler(data: parsedData, response: nil, msgError: nil)
+                                onCompletionHandler(parsedData, nil, nil)
                             }
                             catch let error1 as NSError {
                                 
@@ -190,7 +190,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                                 
                                 errorDetails = NSError(domain: "", code: ERROR_CODE_UNABLE_TO_PARSE, userInfo: nil)
                                 
-                                onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                                onCompletionHandler(nil, nil, errorDetails)
                             }
                         }
                     }
@@ -203,30 +203,30 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         //return true
     }
     
-    class func makeRequestWithTheDetails(urlstr : String? , httpMethod : String? , httpReqbody : NSDictionary?, httpReqHeader : NSDictionary?, requestOrgnalData : Bool,onCompletionHandler : MyClosure ) {
+    @objc class func makeRequestWithTheDetails(urlstr : String? , httpMethod : String? , httpReqbody : NSDictionary?, httpReqHeader : NSDictionary?, requestOrgnalData : Bool,onCompletionHandler : @escaping MyClosure ) {
         
         if (nil == urlstr  || nil == httpMethod) {
             
             let errorDetails : NSError = NSError(domain: "", code: ERROR_CODE_PARA_MISSING, userInfo: nil)
             
-            onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+            onCompletionHandler(nil, nil, errorDetails)
         }
         
-        let request = NSMutableURLRequest(URL:NSURL(string: urlstr!)!)
-        request.HTTPMethod = httpMethod!
+        let request = NSMutableURLRequest(url:NSURL(string: urlstr!)! as URL)
+        request.httpMethod = httpMethod!
         
         //Body
         if( nil != httpReqbody) {
             
             do
             {
-                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(httpReqbody!, options: NSJSONWritingOptions.PrettyPrinted)
+                request.httpBody = try JSONSerialization.data(withJSONObject: httpReqbody!, options: JSONSerialization.WritingOptions.prettyPrinted)
             }
             catch
             {
                 let errorDetails : NSError = NSError(domain: "", code: ERROR_CODE_PARA_MISSING, userInfo: nil)
                 
-                onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                onCompletionHandler(nil, nil, errorDetails)
             }
         }
         
@@ -240,29 +240,27 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        let session = NSURLSession.sharedSession()
-        
-        let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+        let session = URLSession.shared
+        let task = session.dataTask(with: request as URLRequest,  completionHandler: { data, response, error -> Void in
             
-            
-            if let httpResponse = response as? NSHTTPURLResponse {
+            if let httpResponse = response as? HTTPURLResponse {
                 if 500 == httpResponse.statusCode {
                     
                     let errorDetails : NSError? = NSError(domain: "", code: NSURLErrorTimedOut, userInfo: nil)
-                    onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                    onCompletionHandler(nil, nil, errorDetails)
                     
                 }
                 else {
                     
                     if( nil != error){
                         
-                        var errorDetails : NSError? = error
+                        var errorDetails : NSError? = error as NSError?
                         
-                        if error?.code ==  NSURLErrorTimedOut {
+                        if error?._code ==  NSURLErrorTimedOut {
                             
                             errorDetails = NSError(domain: "", code: ERROR_CODE_TIMED_OUT, userInfo: nil)
                         }
-                        else if NSURLErrorNotConnectedToInternet == error?.code {
+                        else if NSURLErrorNotConnectedToInternet == error?._code {
                             
                             errorDetails = NSError(domain: "", code: ERROR_CODE_TIMED_OUT, userInfo: nil)
                         }
@@ -270,13 +268,13 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                             
                             errorDetails = NSError(domain: "", code: ERROR_CODE_UNABLE_TO_DOWNLOAD, userInfo: nil)
                         }
-                        onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                        onCompletionHandler(nil, nil, errorDetails)
                     }
                         
                     else {
                         if true == requestOrgnalData{
                             
-                            onCompletionHandler(data: data!, response: nil, msgError: nil)
+                            onCompletionHandler(data! as AnyObject, nil, nil)
                         }
                         else {
                             
@@ -284,9 +282,9 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                                 
                                 let parsedData: AnyObject?
                                 
-                                parsedData = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
+                                parsedData = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions(rawValue: 0)) as AnyObject
                                 
-                                onCompletionHandler(data: parsedData, response: nil, msgError: nil)
+                                onCompletionHandler(parsedData, nil, nil)
                             }
                             catch let error1 as NSError {
                                 
@@ -294,7 +292,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
                                 
                                 errorDetails = NSError(domain: "", code: ERROR_CODE_UNABLE_TO_PARSE, userInfo: nil)
                                 
-                                onCompletionHandler(data: nil, response: nil, msgError: errorDetails)
+                                onCompletionHandler(nil, nil, errorDetails)
                             }
                         }
                     }
@@ -315,7 +313,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         
         do
         {
-            try fileManger.createDirectoryAtPath(newDir, withIntermediateDirectories: true, attributes: nil)
+            try fileManger.createDirectory(atPath: newDir, withIntermediateDirectories: true, attributes: nil)
         }
         catch
         {
@@ -326,7 +324,7 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
     
     
     class func getFilesDirectory() -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         
         let newDir = String(format: "%@/%@", paths[0],USER_FILES_PATH)
         
@@ -353,11 +351,11 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         
         if nil != fileIdToDownload && "" != fileIdToDownload && nil != fileData && nil != Type && "" != Type {
             
-            let filename : String? = getFilePath(fileIdToDownload, fileType: Type)
+            let filename : String? = getFilePath(fileId: fileIdToDownload, fileType: Type)
             
             if nil != filename && "" != filename {
                 
-                retVal = fileData!.writeToFile(filename!, atomically: true)
+                retVal = fileData!.write(toFile: filename!, atomically: true)
                 
             }
             
@@ -379,12 +377,12 @@ typealias onDataDownLoadComplete = (msgError: NSError?) -> Void
         
         if nil != fileID && "" != fileID {
             
-            filePath = getFilePath(fileID, fileType: fileType)
+            filePath = getFilePath(fileId: fileID, fileType: fileType)
             
             
             if nil != filePath && "" != filePath {
                 
-                if fileManger.fileExistsAtPath(filePath!) {
+                if fileManger.fileExists(atPath: filePath!) {
                     
                     
                 }

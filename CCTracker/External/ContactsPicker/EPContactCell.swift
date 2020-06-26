@@ -19,12 +19,12 @@ class EPContactCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        selectionStyle = UITableViewCellSelectionStyle.None
+        selectionStyle = UITableViewCell.SelectionStyle.none
         contactContainerView.layer.masksToBounds = true
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -43,19 +43,19 @@ class EPContactCell: UITableViewCell {
         //Update all UI in the cell here
         self.contactTextLabel?.text = contact.displayName()
         
-        updateSubtitleBasedonType(subtitleType, contact: contact)
+        updateSubtitleBasedonType(subtitleType: subtitleType, contact: contact)
         
         if contact.thumbnailProfileImage != nil
         {
             self.contactImageView?.image = contact.thumbnailProfileImage
-            self.contactImageView.hidden = false
-            self.contactInitialLabel.hidden = true
+            self.contactImageView.isHidden = false
+            self.contactInitialLabel.isHidden = true
         }
         else{
             self.contactInitialLabel.text = contact.contactInitials()
-            updateInitialsColorForIndexPath(indexPath)
-            self.contactImageView.hidden = true
-            self.contactInitialLabel.hidden = false
+            updateInitialsColorForIndexPath(indexpath: indexPath)
+            self.contactImageView.isHidden = true
+            self.contactInitialLabel.isHidden = false
         }
 
     }

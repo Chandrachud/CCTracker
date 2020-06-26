@@ -13,6 +13,7 @@
 #import "ServerCommunicator.h"
 #import "CCCapture-Swift.h"
 #import "MBProgressHUD.h"
+#import "CCCapture-Swift.h"
 
 @interface TransactionsController ()<UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate>
 {

@@ -52,10 +52,9 @@ NSString *updateUserInfo = @"update/user/detail";
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"POST" httpReqbody:parameters httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
-        
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"POST" httpReqbody:parameters httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error) {
+
         if ( nil != downloadHandlerBlock){
-            
             downloadHandlerBlock(returnObj,error);
         }
     }];
@@ -90,7 +89,7 @@ NSString *updateUserInfo = @"update/user/detail";
     [parameters setValue:userName forKey:@"username"];
     [parameters setValue:password forKey:@"password"];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"POST" httpReqbody:parameters httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"POST" httpReqbody:parameters httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -105,7 +104,7 @@ NSString *updateUserInfo = @"update/user/detail";
     NSString *cardId  = [del.cardDict valueForKey:@"cardId"];
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@/",baseUrl,getAllTransactions,cardId];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -118,7 +117,7 @@ NSString *updateUserInfo = @"update/user/detail";
     
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@/",baseUrl,getAllCards,UserId];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -131,7 +130,7 @@ NSString *updateUserInfo = @"update/user/detail";
     
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@/",baseUrl,getUserInfo,userId];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -148,7 +147,7 @@ NSString *updateUserInfo = @"update/user/detail";
     
     NSString *urlString = [NSString stringWithFormat:@"%@%@/",baseUrl,saveTransaction];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"POST" httpReqbody:dictionary httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"POST" httpReqbody:dictionary httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -190,7 +189,7 @@ NSString *updateUserInfo = @"update/user/detail";
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@",baseUrl,getReceipt,transactionId];
     
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:YES onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"GET" httpReqbody:nil httpReqHeader:nil requestOrgnalData:YES onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             
@@ -205,7 +204,7 @@ NSString *updateUserInfo = @"update/user/detail";
     NSString *urlString = [NSString stringWithFormat:@"%@%@/",baseUrl,updateUserInfo];
     
     [dictionary setValue:@"" forKey:@"address"];
-    [DataManager makeRequestWithTheDetails:urlString httpMethod:@"POST" httpReqbody:dictionary httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
+    [DataManager makeRequestWithTheDetailsWithUrlstr:urlString httpMethod:@"POST" httpReqbody:dictionary httpReqHeader:nil requestOrgnalData:FALSE onCompletionHandler:^(id returnObj,NSURLResponse *responseType,NSError *error){
         
         if ( nil != downloadHandlerBlock){
             

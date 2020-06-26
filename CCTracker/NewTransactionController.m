@@ -518,7 +518,6 @@
     UINavigationController *navCont = [[UINavigationController alloc]initWithRootViewController:picker];
     
     [self presentViewController:navCont animated:YES completion:nil];
-    
 }
 
 - (void)selectPhoto {

@@ -711,6 +711,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -997,6 +998,7 @@
 				PROVISIONING_PROFILE = "e165fd20-879d-4dc1-988d-f96cb22dd93d";
 				SWIFT_OBJC_BRIDGING_HEADER = "CCTracker/CCTracker-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1015,6 +1017,7 @@
 				PRODUCT_NAME = CCCapture;
 				PROVISIONING_PROFILE = "e165fd20-879d-4dc1-988d-f96cb22dd93d";
 				SWIFT_OBJC_BRIDGING_HEADER = "CCTracker/CCTracker-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

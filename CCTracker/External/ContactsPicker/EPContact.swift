@@ -32,9 +32,9 @@ class EPContact: NSObject {
         super.init()
         
         //VERY IMPORTANT: Make sure you have all the keys accessed below in the fetch request
-        firstName = contact.givenName
-        lastName = contact.familyName
-        company = contact.organizationName
+        firstName = contact.givenName as NSString
+        lastName = contact.familyName as NSString
+        company = contact.organizationName as NSString
         contactId = contact.identifier
         
         //If lets are used becasue there are chances that we would be accessing nil objects
@@ -49,40 +49,40 @@ class EPContact: NSObject {
         }
         
         if let birthdayDate = contact.birthday {
-            birthday = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)?.dateFromComponents(birthdayDate)
+            birthday = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)?.date(from: birthdayDate) as NSDate?
             
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = EPGlobalConstants.Strings.birdtdayDateFormat
             //Example Date Formats:  Oct 4, Sep 18, Mar 9
-            birthdayString = dateFormatter.stringFromDate(birthday!)
+            birthdayString = dateFormatter.string(from: birthday! as Date)
         }
         
         for phoneNumber in contact.phoneNumbers {
-            let phone = phoneNumber.value as! CNPhoneNumber
-            phoneNumbers.append((phone.stringValue,phoneNumber.label))
+            let phone = phoneNumber.value
+            phoneNumbers.append((phoneNumber: phone.stringValue, phoneLabel: phoneNumber.label ?? ""))
         }
 
         for emailAddress in contact.emailAddresses {
-            let email = emailAddress.value as! String
-            emails.append((email,emailAddress.label))
+            let email = emailAddress.value as String
+            emails.append((email,emailAddress.label ?? ""))
         }
 
     
     }
     
     func displayName() -> String {
-        return "\(firstName) \(lastName)"
+        return "\(String(describing: firstName)) \(String(describing: lastName))"
     }
     
     func contactInitials() -> String {
         var initials = String()
         if firstName.length > 0
         {
-            initials.appendContentsOf(firstName.substringToIndex(1))
+            initials.append(firstName.substring(to: 1))
         }
         if lastName.length > 0
         {
-            initials.appendContentsOf(lastName.substringToIndex(1))
+            initials.append(lastName.substring(to: 1))
         }
         return initials
     }
